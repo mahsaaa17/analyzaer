@@ -1,0 +1,7 @@
+__pycache__/
+*.xlsx
+*.png
+*.pdf
+*.json
+.env
+.ipynb_checkpoints/
