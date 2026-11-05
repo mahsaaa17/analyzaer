@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="app/templates")
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     """نمایش صفحه اصلی برای ورود متن مصاحبه توسط کاربر"""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html", {})
 
 @app.post("/analyze", response_class=HTMLResponse)
 async def analyze_interview(request: Request, interview_text: str = Form(...)):
@@ -23,12 +23,11 @@ async def analyze_interview(request: Request, interview_text: str = Form(...)):
     # اجرای سرویس تحلیل داده‌بنیاد
     analysis_result = perform_grounded_theory_analysis(interview_text)
     
-    return templates.TemplateResponse("analysis_result.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "analysis_result.html", {
         "interview_text": interview_text,
-        "open_codes": analysis_result["open_codes"],
-        "axial_codes": analysis_result["axial_codes"],
-        "core_category": analysis_result["core_category"],
-        "categories": analysis_result["categories"],
-        "relations": analysis_result["relations"]
+        "open_codes": analysis_result.get("open_codes", []),
+        "axial_codes": analysis_result.get("axial_codes", []),
+        "core_category": analysis_result.get("core_category", ""),
+        "categories": analysis_result.get("categories", []),
+        "relations": analysis_result.get("relations", [])
     })
